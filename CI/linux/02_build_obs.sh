@@ -53,12 +53,17 @@ _configure_obs() {
         PIPEWIRE_OPTION="-DENABLE_PIPEWIRE=OFF"
     fi
 
+    if [ "${DISABLE_BROWSER}" ]; then
+        BROWSER_OPTION="-DENABLE_BROWSER=OFF"
+    fi
+
     cmake -S . -B ${BUILD_DIR} -G Ninja \
         -DCEF_ROOT_DIR="${DEPS_BUILD_DIR}/cef_binary_${LINUX_CEF_BUILD_VERSION:-${CI_LINUX_CEF_VERSION}}_linux64" \
         -DCMAKE_BUILD_TYPE=${BUILD_CONFIG} \
         -DLINUX_PORTABLE=${PORTABLE_BUILD:-OFF} \
         -DENABLE_AJA=OFF \
         -DENABLE_NEW_MPEGTS_OUTPUT=OFF \
+        ${BROWSER_OPTION} \
         ${PIPEWIRE_OPTION} \
         ${YOUTUBE_OPTIONS} \
         ${TWITCH_OPTIONS} \
@@ -103,7 +108,9 @@ print_usage() {
             "-v, --verbose                  : Enable more verbose build process output\n" \
             "-p, --portable                 : Create portable build (default: off)\n" \
             "--disable-pipewire             : Disable building with PipeWire support (default: off)\n" \
-            "--build-dir                    : Specify alternative build directory (default: build)\n"
+            "--disable-browser              : Disable building with browser support (default: off)\n" \
+            "--build-dir                    : Specify alternative build directory (default: build)\n" \
+            "--build-config                 : Build configuration to use - Default: RelWithDebInfo"
 }
 
 build-obs-main() {
@@ -115,7 +122,9 @@ build-obs-main() {
                 -v | --verbose ) export VERBOSE=TRUE; shift ;;
                 -p | --portable ) export PORTABLE=TRUE; shift ;;
                 --disable-pipewire ) DISABLE_PIPEWIRE=TRUE; shift ;;
+                --disable-browser ) DISABLE_BROWSER=TRUE; shift ;;
                 --build-dir ) BUILD_DIR="${2}"; shift 2 ;;
+                --build-config ) BUILD_CONFIG="${2}"; shift 2 ;;
                 -- ) shift; break ;;
                 * ) break ;;
             esac

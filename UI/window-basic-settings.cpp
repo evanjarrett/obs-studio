@@ -386,6 +386,7 @@ OBSBasicSettings::OBSBasicSettings(QWidget *parent)
 	HookWidget(ui->keepRecordStreamStops,CHECK_CHANGED,  GENERAL_CHANGED);
 	HookWidget(ui->replayWhileStreaming, CHECK_CHANGED,  GENERAL_CHANGED);
 	HookWidget(ui->keepReplayStreamStops,CHECK_CHANGED,  GENERAL_CHANGED);
+	HookWidget(ui->flushReplayOnSave,    CHECK_CHANGED,  GENERAL_CHANGED);
 	HookWidget(ui->systemTrayEnabled,    CHECK_CHANGED,  GENERAL_CHANGED);
 	HookWidget(ui->systemTrayWhenStarted,CHECK_CHANGED,  GENERAL_CHANGED);
 	HookWidget(ui->systemTrayAlways,     CHECK_CHANGED,  GENERAL_CHANGED);
@@ -1322,6 +1323,10 @@ void OBSBasicSettings::LoadGeneralSettings()
 		config_get_bool(GetGlobalConfig(), "BasicWindow",
 				"KeepReplayBufferStreamStops");
 	ui->keepReplayStreamStops->setChecked(keepReplayStreamStops);
+
+	bool flushReplayOnSave = config_get_bool(
+		GetGlobalConfig(), "BasicWindow", "FlushReplayBufferOnSave");
+	ui->flushReplayOnSave->setChecked(flushReplayOnSave);
 
 	bool systemTrayEnabled = config_get_bool(
 		GetGlobalConfig(), "BasicWindow", "SysTrayEnabled");
@@ -3251,6 +3256,11 @@ void OBSBasicSettings::SaveGeneralSettings()
 				"KeepReplayBufferStreamStops",
 				ui->keepReplayStreamStops->isChecked());
 
+	if (WidgetChanged(ui->flushReplayOnSave))
+		config_set_bool(GetGlobalConfig(), "BasicWindow",
+				"FlushReplayBufferOnSave",
+				ui->flushReplayOnSave->isChecked());
+
 	if (WidgetChanged(ui->systemTrayEnabled)) {
 		config_set_bool(GetGlobalConfig(), "BasicWindow",
 				"SysTrayEnabled",
@@ -5078,6 +5088,7 @@ void OBSBasicSettings::UpdateAutomaticReplayBufferCheckboxes()
 	ui->replayWhileStreaming->setEnabled(state);
 	ui->keepReplayStreamStops->setEnabled(
 		state && ui->replayWhileStreaming->isChecked());
+	ui->flushReplayOnSave->setEnabled(state);
 }
 
 void OBSBasicSettings::SimpleReplayBufferChanged()

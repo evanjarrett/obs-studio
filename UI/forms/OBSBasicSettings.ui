@@ -416,6 +416,13 @@
                      </property>
                     </widget>
                    </item>
+                   <item row="7" column="1">
+                    <widget class="QCheckBox" name="flushReplayOnSave">
+                     <property name="text">
+                      <string>Basic.Settings.General.FlushReplayBufferAfterSave</string>
+                     </property>
+                    </widget>
+                   </item>
                   </layout>
                  </widget>
                 </item>
@@ -7531,6 +7538,7 @@
   <tabstop>keepRecordStreamStops</tabstop>
   <tabstop>replayWhileStreaming</tabstop>
   <tabstop>keepReplayStreamStops</tabstop>
+  <tabstop>flushReplayOnSave</tabstop>
   <tabstop>snappingEnabled</tabstop>
   <tabstop>snapDistance</tabstop>
   <tabstop>screenSnapping</tabstop>

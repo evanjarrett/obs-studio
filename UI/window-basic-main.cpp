@@ -7497,6 +7497,12 @@ void OBSBasic::ReplayBufferSaved()
 			      .arg(QT_UTF8(path.c_str()));
 	ShowStatusBarMessage(msg);
 	lastReplay = path;
+
+	if (config_get_bool(GetGlobalConfig(), "BasicWindow", 
+		"FlushReplayBufferOnSave")) {
+		proc_handler_call(ph, "clear", &cd);
+	}
+
 	calldata_free(&cd);
 
 	if (api)
